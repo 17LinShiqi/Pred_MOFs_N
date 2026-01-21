@@ -18,9 +18,6 @@ import sys
 import os
 
 
-
-# ================= 配置参数 ================
-
 ## Load the trained XGB model
 model = joblib.load("../model/xgb.pt") ## The detailed code for model training is in “XGB_code.py”
 
@@ -32,17 +29,15 @@ canvas1 = tk.Canvas(root, width = 800, height =600) ## Main window size
 canvas1.pack()
 
 ## The plate layout within the main interface
-# 主要框架（粗黑框）
 re1 = canvas1.create_rectangle(50, 20, 750, 550, outline='black', width=1.5)
 re2 = canvas1.create_rectangle(50.25, 450, 750, 550, outline='black', width=2.3)
 
-# 辅助框架（darkgray）
 re3 = canvas1.create_rectangle(70, 50, 730, 430, outline='darkgray', width=1)
 re4 = canvas1.create_rectangle(400, 330, 730, 430, outline='darkgray', width=1)
 re5 = canvas1.create_rectangle(50, 450, 750, 500, outline='darkgray', width=1)
 re6 = canvas1.create_rectangle(50, 500, 750, 550, outline='darkgray', width=1)
 
-# 标签
+
 label_B = tk.Label(root, font=('Times New Roman', 12), text='Predicted results')
 canvas1.create_window(470, 330, window=label_B)
 
@@ -55,21 +50,18 @@ canvas1.create_window(600, 580, window=label_B)
 
 ## Message box (Related literature on molecular physical properties)
 def cmx1():
-    window = tk.Tk()   #创建一个新的Tkinter窗口
-    window.title('Warm prompt')  #设置窗口标题   
-    window.geometry('350x250')  #设置窗口大小
+    window = tk.Tk()  
+    window.title('Warm prompt')  
+    window.geometry('350x250')  
     
-    #创建一个标签，显示文本和超链接
     link = tk.Label(window, text='The physical property of material \nare known from the literature:\nhttps://doi.org/10.1016/j.memsci.2024.123612'
                     , font=('Times New Roman',10),anchor="center")
-    link.place(x=30, y=50) #将标签放置在窗口的位置
+    link.place(x=30, y=50) 
     
-    #定义一个函数，用于在点击超链接时打开浏览器访问链接
     def open_url(event):
         webbrowser.open("https://doi.org/10.1016/j.memsci.2024.123612", new=0)         
-    link.bind("<Button-1>", open_url)    #将点击事件绑定在标签上
+    link.bind("<Button-1>", open_url) 
     
-#创建按钮并放置在主界面的画布上
 btn1 = tk.Button(root, text='Tooltip', font=('Times New Roman', 10), command=cmx1)
 canvas1.create_window(100, 410, window=btn1)
 
@@ -86,10 +78,9 @@ w_box = 600
 h_box = 450    
 
 
-# 加载并缩放图片
 photo1 = Image.open("../Img/full_name.png")
 w, h = photo1.size
-photo1_resized = resize(w, h, w_box, h_box, photo1)    # 假设 resize 是自定义函数
+photo1_resized = resize(w, h, w_box, h_box, photo1)   
 tk_image1 = ImageTk.PhotoImage(photo1_resized)
 
 
@@ -115,7 +106,6 @@ def resize(w, h, w_box, h_box, pil_image):
 w_box = 600  
 h_box = 500    
 
-# 加载并缩放图片
 photo2 = Image.open("../Img/sample_file.png")
 w, h = photo2.size
 photo2_resized = resize(w, h, w_box, h_box, photo2)
@@ -128,27 +118,22 @@ def cmx3():
     top1.title('Instructions for use')     
     top1.geometry('680x580')
     
-    # 创建一个框架用于居中内容
     frame = tk.Frame(top1)
     frame.pack(expand=True, fill='both')
     
-    # 创建文字标签
     lab2 = tk.Label(frame, text=' Create the data you want to compute in the format given below. \n An example is the prediction of N_NH3', font=('Times New Roman', 15), justify='left')
-    lab2.pack(pady=10, anchor='w')  # 使用 pack 布局管理器，并添加上下边距
+    lab2.pack(pady=10, anchor='w') 
     
-    # 创建图片标签
     lab3 = ttk.Label(frame, text="photo:", image=tk_image2)
-    lab3.pack(pady=10, anchor='w')  # 使用 pack 布局管理器，并添加上下边距
+    lab3.pack(pady=10, anchor='w') 
     
-    # 创建另一个文字标签
     lab4 = tk.Label(frame, text=' After generating the file, you may click the import file button on the interface.\n The forecasted data will be kept in "Result/Batch_Predicted_N.xlsx".', font=('Times New Roman', 15), justify='left')
-    lab4.pack(pady=10, anchor='w')  # 使用 pack 布局管理器，并添加上下边距
+    lab4.pack(pady=10, anchor='w') 
     
     top1.mainloop() 
 
 btn3 = tk.Button(root, text='READ ME', font=('Times New Roman', 10), command=cmx3)
 canvas1.create_window(100, 475, window=btn3)
-
 
 
 ## Sets the label and entry for entering the nine descriptor 
@@ -219,10 +204,10 @@ def values():
     
     global New_K  # our 2nd input variable
     New_K = float(entry6.get())
-    if New_K <= 0:  # 防御非正值
-        messagebox.showerror("Error", "K值必须大于0！")
+    if New_K <= 0:  
+        messagebox.showerror("Error", "K must >0！")
         return
-    New_K = np.log10(New_K)  # 取以10为底的对数
+    New_K = np.log10(New_K) 
     
     global New_Qst #our 2nd input variable
     New_Qst = float(entry7.get()) 
@@ -233,10 +218,10 @@ def values():
                           New_Qst]])      
    
     Pred_N = Pred_N[0]
- # 保留两位小数（四舍五入）
+
     Pred_N_rounded = round(Pred_N, 2)
 
-# 格式化输出字符串
+
     Prediction_result = f"{Pred_N_rounded:.2f}"
     
 
@@ -247,12 +232,12 @@ def values():
 
     ## N label
     lbo1 = tk.Label(root, font=('Times New Roman', 12, "italic"), text='N:')
-    canvas1.create_window(520, 380, window=lbo1)  # 调整标签位置，避免挡住按钮
+    canvas1.create_window(520, 380, window=lbo1) 
     
     ## unit label
     lbo2 = tk.Label(root, font=('Times New Roman', 12),
                     text='(mol/kg)')
-    canvas1.create_window(680, 380, window=lbo2)  # 调整标签位置，避免挡住按钮
+    canvas1.create_window(680, 380, window=lbo2) 
 
 ## button to call the 'values' command above       
 button1 = tk.Button (root,font=('Times New Roman',10), text='Predicted N',command=values) 
@@ -279,72 +264,67 @@ canvas1.create_window(520, 480, window=entry_filename)
 def print_file():
     a = entry_filename.get()
     
-    # 检查文件路径有效性
     if not os.path.exists(a):
-        messagebox.showerror("Error", "文件路径不存在！")
+        messagebox.showerror("Error", "The file path does not exist!")
         return
     
-    # 加载数据
     try:
         pred_data1 = pd.read_excel(a)
     except Exception as e:
-        messagebox.showerror("Error", f"文件读取失败：{str(e)}")
+        messagebox.showerror("Error", f"File read failed：{str(e)}")
         return
     
     # 检查数据是否为空
     if pred_data1.empty:
-        messagebox.showerror("Error", "文件内容为空！")
+        messagebox.showerror("Error", "The file is empty!")
         return
     
     # 删除缺失值
     pred_data = pred_data1.dropna(axis=0)
     if pred_data.empty:
-        messagebox.showerror("Error", "数据经过缺失值处理后为空！")
+        messagebox.showerror("Error", "The data is empty after missing value processing!")
         return
     
     if (pred_data['K'] <= 0).any():
-       messagebox.showerror("Error", "K列存在非正值，请检查数据！")
+       messagebox.showerror("Error", "Column K contains non-positive values. Please check the data!")
        return
     
-    # 检查列名是否匹配
+  
     required_columns = ['φ', 'VSA', 'LCD', 'PLD', 'ρ', 'K', 'Qst']
     missing_columns = [col for col in required_columns if col not in pred_data.columns]
     if missing_columns:
-        messagebox.showerror("Error", f"缺失列：{', '.join(missing_columns)}")
+        messagebox.showerror("Error", f"missing columns：{', '.join(missing_columns)}")
         return
     
-    # 构建特征矩阵
     df = pd.DataFrame(pred_data, columns=required_columns)
     X_pred = df[['φ', 'VSA', 'LCD', 'PLD', 'ρ', 'K', 'Qst']].astype(float)
-    X_pred['K'] = np.log10(X_pred['K'])  # 关键修改点
+    X_pred['K'] = np.log10(X_pred['K']) 
     X_pred = X_pred.astype(float)
    
-    # 检查特征矩阵是否为空
+
     if X_pred.shape[0] == 0:
-        messagebox.showerror("Error", "特征矩阵无有效样本！")
+        messagebox.showerror("Error", "No valid samples found in the feature matrix!")
         return
     
-    # 标准化
+
     try:
         transfer = StandardScaler()
         X_pred = transfer.fit_transform(X_pred)
     except Exception as e:
-        messagebox.showerror("Error", f"标准化失败：{str(e)}")
+        messagebox.showerror("Error", f"standardization failure：{str(e)}")
         return
     
-    # 模型预测
     try:
         Y_predict2 = model.predict(X_pred)
     except Exception as e:
-        messagebox.showerror("Error", f"模型预测失败：{str(e)}")
+        messagebox.showerror("Error", f"model prediction failure：{str(e)}")
         return
     
-    # 结果保存
 
     d1 = pd.DataFrame({'Pred_N': Y_predict2})
     newdata = pd.concat([pred_data, d1], axis=1)
     
-    # 确保输出目录存在
+
     output_dir = os.path.dirname("../Result/Batch_Predicted_N.xlsx")
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -352,10 +332,9 @@ def print_file():
     try:
         newdata.to_excel("../Result/Batch_Predicted_N.xlsx", index=False)
     except Exception as e:
-        messagebox.showerror("Error", f"结果保存失败：{str(e)}")
+        messagebox.showerror("Error", f"result failed to save.：{str(e)}")
         return
     
-    # 显示成功信息
     label_P = tk.Label(root, font=('Times New Roman', 12),
                        text='Predicted results have default stored in:\nResult/Batch_Predicted_N.xlsx', bg='blue')
     canvas1.create_window(450, 525, window=label_P)
@@ -366,3 +345,4 @@ but_pre=tk.Button(root,font=('Times New Roman',10)
 canvas1.create_window(120, 525, window=but_pre)
 
 root.mainloop() 
+
