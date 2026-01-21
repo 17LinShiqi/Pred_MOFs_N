@@ -13,7 +13,7 @@ This software presents a pre-trained XGB model for predicting adsorption amounts
      1.XGB_code.py that has the code for the machine learning using XGB 
      2.Prediction_N_code.py that has the code for a human-computer interactive interface software.
 
-2- Extrapolation_data
+2- data
     11.xlsx that is a sample file for batch prediction of material diffusivity.
 
 3- Img 
